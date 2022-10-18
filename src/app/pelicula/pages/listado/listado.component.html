@@ -1,0 +1,28 @@
+<h3>Listado de Peliculas</h3>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th> Id </th>
+            <th> Titulo </th>         
+            <th> En Cines </th>
+            <th> Fecha Estreno</th>
+            <th></th>         
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let pelicula of peliculas">
+            <td> {{ pelicula.id }} </td>           
+            <td> {{ pelicula.titulo | titlecase}} </td>
+            <td> {{ pelicula.enCines }} </td>
+            <td> {{ pelicula.fechaEstreno | date: 'dd/MM/yyy' }} </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<button type="button"
+        class="btn btn-primary"
+        routerLink="../agregar">
+        Agregar Pelicula
+</button>
