@@ -1,6 +1,7 @@
 export interface Actor {
-    id: number;
+    id?: string;
     nombre: string;
-    fechaNacimiento: Date;
-    foto: string
+    fechaNacimiento?: string;
+    fechaFormateada?: string;
+    foto?: string
   }

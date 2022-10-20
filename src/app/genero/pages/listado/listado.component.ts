@@ -30,7 +30,6 @@ export class ListadoComponent implements OnInit {
 
       this.generoService.borrarGenero( id.toString() )
             .subscribe( resp => {
-              //console.log( resp );
               this.ngOnInit();
             });
 

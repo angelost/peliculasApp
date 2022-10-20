@@ -6,13 +6,18 @@
             <th> Id </th>
             <th> Actor </th>         
             <th> Fecha Nacimiento</th>
+            <th> Acciones </th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let actor of actores">
             <td> {{ actor.id }} </td>           
             <td> {{ actor.nombre | titlecase }} </td>
-            <td> {{ actor.fechaNacimiento | date: 'dd/MM/yyyy' }} </td>
+            <td> {{ actor.fechaNacimiento | date: 'dd-MM-yyyy' }} </td>
+            <td>
+                <button type="button" class="btn btn-link" [routerLink]="['/actor/editar', actor.id]" >Editar</button>
+                <button type="button" class="btn btn-link" (click)="borrar( actor.id! )">Borrar</button>  
+            </td>
         </tr>
     </tbody>
 </table>

@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ActorRoutingModule } from './actor-routing.module';
 import { AgregarComponent } from './pages/agregar/agregar.component';
 import { ListadoComponent } from './pages/listado/listado.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -14,7 +15,9 @@ import { ListadoComponent } from './pages/listado/listado.component';
   ],
   imports: [
     CommonModule,
-    ActorRoutingModule
+    ActorRoutingModule,
+    ReactiveFormsModule,
+    NgbDatepickerModule
   ]
 })
 export class ActorModule { }

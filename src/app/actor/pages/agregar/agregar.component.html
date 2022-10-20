@@ -1,1 +1,107 @@
-<p>agregar works!</p>
+<h2> {{ ( actor.id )? 'Editar': 'Nuevo' }} Actor </h2>
+
+
+<div class="row">
+    <div class="col">
+
+    <form (ngSubmit)="guardar()"
+          autocomplete="off"
+          [formGroup]="miFormulario">
+           
+        <!-- Nombre -->
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+                <input type="text"
+                        class="form-control"
+                        formControlName="nombre"
+                        placeholder="nombre actor">
+
+                <span class="form-text text-danger"
+                    *ngIf="campoEsValido('nombre')">
+                    3 caracteres minimos
+                </span>
+
+            </div>
+        </div>
+
+        <!-- Fecha Nacimiento -->
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Fecha Nacimiento</label>
+            <div class="col-sm-9 " >
+                <div class="input-group">
+                    <input 
+                       class="form-control"
+                       formControlName="fechaNacimiento"
+                       ngbDatepicker #d="ngbDatepicker"
+                       placeholder="06-08-1986"/>
+
+                    <button class="btn btn-outline-secondary calendar"
+                            (click)="d.toggle()"
+                            type="button">
+                    </button>
+                </div>
+                
+                <span class="form-text text-danger"
+                      *ngIf="campoEsValido('fechaNacimiento')">
+                        Formato Fecha dd-MM-yyyy
+                </span> 
+            </div>
+        </div>
+        
+        <!-- Foto -->
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Foto</label>
+            <div class="col-sm-9" >
+                <input class="form-control"
+                    type="file"                    
+                    formControlName="foto"
+                    (change)="capturarFile($event)"
+                    placeholder="archivo">
+                    
+                <span class="form-text text-danger"
+                    *ngIf="campoEsValido('foto')">
+                    Debe subir una imagen
+                </span>
+                <div *ngIf="previsualizacion">
+                    <img width="200px" [src]="previsualizacion" alt="" class="img-thumbnail" >
+                </div> 
+            </div> 
+                      
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button type="submit"
+                        class="btn btn-primary"
+                        [disabled]="loading">
+                    {{ (loading)? 'Cargando': 'Guardar'}}
+                </button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        routerLink="/actor/listado">
+                    Volver
+                </button>
+            </div>            
+        </div>
+
+    </form>
+
+    </div>
+</div>
+
+<hr>
+
+
+<div class="row">
+    <div class="col">
+
+        <span>Valid</span>
+        <pre>{{ miFormulario.valid }}</pre>       
+
+
+        <span>Value</span>
+        <pre>{{ miFormulario.value | json }}</pre>       
+
+    </div>
+</div>
