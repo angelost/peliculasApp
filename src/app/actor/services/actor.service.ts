@@ -10,27 +10,27 @@ import { Actor } from '../interfaces/actor.interface';
 })
 export class ActorService {
 
-  private baseUrl: string = environment.baseUrl;
+  private baseUrl: string = environment.baseUrl + '/actores';
 
   constructor( private http: HttpClient ) { }
 
   getActores(): Observable<Actor[]> {
-    return this.http.get<Actor[]>(`${ this.baseUrl }/actores`);     
+    return this.http.get<Actor[]>(`${ this.baseUrl }`);     
   }
 
   getActorPorId( id: string ): Observable<Actor> {
-    return this.http.get<Actor>(`${ this.baseUrl }/actores/${ id }`);
+    return this.http.get<Actor>(`${ this.baseUrl }/${ id }`);
   } 
 
   agregarActor( formData: FormData ): Observable<Actor> {     
-    return this.http.post<Actor>(`${ this.baseUrl }/actores`, formData);
+    return this.http.post<Actor>(`${ this.baseUrl }`, formData);
   }
 
   actualizarActor( id: string, patch: Operation[] ): Observable<any>{
-    return this.http.patch<any>(`${ this.baseUrl }/actores/${ id }`, patch);
+    return this.http.patch<any>(`${ this.baseUrl }/${ id }`, patch);
   }
 
   borrarActor( id: string ): Observable<any> {
-    return this.http.delete<any>(`${ this.baseUrl }/actores/${ id }`);
+    return this.http.delete<any>(`${ this.baseUrl }/${ id }`);
   }
 }

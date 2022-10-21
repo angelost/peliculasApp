@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, createPlatformFactory, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,8 +35,7 @@ export class AgregarComponent implements OnInit {
   public archivos:any = [];
   public previsualizacion!: string;
   public loading!: boolean;
-
-  actores!: Actor[];
+  
   model!: Actor;
   original!: Actor;
 
@@ -77,14 +76,12 @@ export class AgregarComponent implements OnInit {
 
         this.actor = actor;
         this.previsualizacion = actor.foto!;
+        this.original = actor;
         this.miFormulario.reset({
           nombre: this.actor.nombre,
-          fechaNacimiento: this.actor.fechaFormateada    
-          
+          fechaNacimiento: this.actor.fechaFormateada,
+          foto: this.actor.foto
         });
-
-        this.original = actor;
-
       });
   }
 
@@ -92,28 +89,7 @@ export class AgregarComponent implements OnInit {
     return this.miFormulario.controls[campo].errors
            && this.miFormulario.controls[campo].touched;
   }
-
-  getFechaFormateada( fecha: string, formateada: boolean) {
-
-    const delimitador = '-';
-    
-    if (!fecha) {
-      return '';      
-    } else {
-      const date = fecha.split(delimitador);      
-      const day= parseInt(date[2], 10);
-      const month= parseInt(date[1], 10);
-      const year= parseInt(date[0], 10);
-
-      if (formateada) {
-        return date ? day + delimitador + month + delimitador + year : ''
-      }
-      else {
-        return date ? month + delimitador + day + delimitador + year : ''
-      }     
-    }
-  }
-
+  
   capturarFile(event: any):any {
 
     const archivoCapturado = event.target.files[0];
@@ -121,8 +97,7 @@ export class AgregarComponent implements OnInit {
       this.previsualizacion = imagen.base;
       // console.log( imagen);
     })
-    this.archivos.push(archivoCapturado);   
-
+    this.archivos.push(archivoCapturado);
   }
 
   extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
@@ -146,9 +121,7 @@ export class AgregarComponent implements OnInit {
       return null;
     }
     return null;
-  })
-
-  
+  })  
 
   guardar() {   
 
@@ -169,58 +142,64 @@ export class AgregarComponent implements OnInit {
       
       // Si la entidad tiene id
       if ( this.actor.id ) {
-        
-        // generar el patch
-        this.original.fechaNacimiento = this.original.fechaFormateada;
-        
-        this.model = this.miFormulario.value;
-        this.model.id = this.original.id;
-        this.model.fechaFormateada = this.original.fechaFormateada;
-        this.model.fechaNacimiento = fechaNacimiento;
-        this.model.foto = this.original.foto;      
 
-        // console.log('original', this.original);
-        // console.log('model', this.model);          
-
-        const patch = compare(this.original, this.model);
-        // console.log('patch:', patch);     
-
-        
         // Actualizar
-        this.actorService.actualizarActor( this.actor.id, patch )
-          .subscribe( actor => {
-            this.loading = false;
-            this.router.navigate(['/actor/listado' ]);
-          });
-
-          
+        this.actualizarActor( nombre, fechaNacimiento);
 
       } else {
 
-        //Crear
+        // Crear
+        this.agregarActor( nombre, fechaNacimiento);
 
-        // Crea el FormData
-        const formularioDeDatos = new FormData();
-        formularioDeDatos.append('Nombre', nombre);
-        formularioDeDatos.append('FechaNacimiento', fechaNacimiento!);
-
-        this.archivos.forEach((archivo:any) => {
-          formularioDeDatos.append('Foto', archivo)
-        });         
-
-
-        this.actorService.agregarActor( formularioDeDatos )
-          .subscribe( actor => {
-            this.loading = false;
-            this.router.navigate(['/actor/listado' ]);
-          });          
       }   
       
     } catch (error) {
 
       this.loading = false;
       console.log('ERROR', error);      
-    }     
+    }    
+  }
+
+  agregarActor(nombre: string, fechaNacimiento: string) {
+
+    // Crea el FormData
+    const formularioDeDatos = new FormData();
+    formularioDeDatos.append('Nombre', nombre);
+    formularioDeDatos.append('FechaNacimiento', fechaNacimiento!);
+
+    this.archivos.forEach((archivo:any) => {
+      formularioDeDatos.append('Foto', archivo)
+    });
+
+    this.actorService.agregarActor( formularioDeDatos )
+      .subscribe( actor => {
+        this.loading = false;
+        this.router.navigate(['/actor/listado' ]);
+      });
+  }
+
+  actualizarActor(nombre: string, fechaNacimiento: string) {
+
+    // generar el patch
+    this.original.fechaNacimiento = this.original.fechaFormateada;        
+    this.model = this.miFormulario.value;
+    this.model.id = this.original.id;
+    this.model.fechaFormateada = this.original.fechaFormateada;
+    this.model.fechaNacimiento = fechaNacimiento;
+    this.model.foto = this.original.foto;
+
+    // console.log('original', this.original);
+    // console.log('model', this.model);          
+
+    const patch = compare(this.original, this.model);
+    // console.log('patch', patch);
+
+    this.actorService.actualizarActor( this.actor.id!, patch )
+      .subscribe( actor => {
+        this.loading = false;
+        
+        this.router.navigate(['/actor/listado' ]);
+      });
   }
 
 }

@@ -9,28 +9,28 @@ import { Genero } from '../interfaces/genero.interface';
 })
 export class GeneroService {
 
-  private baseUrl: string = environment.baseUrl;
+  private baseUrl: string = environment.baseUrl + '/generos';
 
   constructor(private http: HttpClient) { }
 
   getGeneros(): Observable<Genero[]> {
-    return this.http.get<Genero[]>(`${ this.baseUrl }/generos`);     
+    return this.http.get<Genero[]>(`${ this.baseUrl }`);     
   }
 
   getGeneroPorId( id: string ): Observable<Genero> {
-    return this.http.get<Genero>(`${ this.baseUrl }/generos/${ id }`);
+    return this.http.get<Genero>(`${ this.baseUrl }/${ id }`);
   }
 
   agregarGenero( genero: Genero ): Observable<Genero> {     
-    return this.http.post<Genero>(`${ this.baseUrl }/generos`, genero);
+    return this.http.post<Genero>(`${ this.baseUrl }`, genero);
   }
 
   actualizarGenero( genero: Genero ): Observable<Genero> {
-    return this.http.put<Genero>(`${ this.baseUrl }/generos/${ genero.id }`, genero);
+    return this.http.put<Genero>(`${ this.baseUrl }/${ genero.id }`, genero);
   }
 
   borrarGenero( id: string ): Observable<any> {
-    return this.http.delete<any>(`${ this.baseUrl }/generos/${ id }`);
+    return this.http.delete<any>(`${ this.baseUrl }/${ id }`);
   }
 
 }
